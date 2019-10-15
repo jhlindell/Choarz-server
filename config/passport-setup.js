@@ -1,6 +1,13 @@
 const passport = require('passport');
 const Account = require('../models/account.model');
 const GoogleStrategy = require('passport-google-oauth20');
+const JwtStrategy = require('passport-jwt').Strategy;
+const { ExtractJwt } = require('passport-jwt');
+
+const jwtOptions = {
+  jwtFromRequest: ExtractJwt.fromHeader('authorization'),
+  secretOrKey: process.env.JWT_SECRET,
+};
 
 const googleStrat = new GoogleStrategy(
   {
@@ -31,4 +38,21 @@ const googleStrat = new GoogleStrategy(
   },
 );
 
+const JwtLogin = new JwtStrategy(jwtOptions, (payload, done) => {
+  // See if the user id in the payload exists in the database
+  // if it does, call done with that
+  // otherwise, call done without a user object
+  Account.findById(payload.id, (err, user) => {
+    if (err) {
+      done(err, false);
+    }
+    if (user) {
+      done(null, user);
+    } else {
+      done(null, false);
+    }
+  });
+});
+
 passport.use(googleStrat);
+passport.use(JwtLogin);
