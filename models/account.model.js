@@ -12,7 +12,7 @@ const AccountSchema = Schema({
   },
   username: {
     type: String,
-    required: [true, 'Email is required'],
+    required: [true, 'Username is required'],
   },
   createdAt: {
     type: Date,
