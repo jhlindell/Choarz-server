@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 exports.tokenForAccount = account => {
   const timestamp = new Date().getTime();
   const payload = {
-    id: account._id,
+    _id: account._id,
     accountID: account.accountID,
     username: account.username,
     email: account.email,
@@ -20,6 +20,11 @@ function getNameFromToken(token) {
   const decodedToken = jwt.decode(token, process.env.JWT_SECRET);
   return decodedToken.familyname;
 }
+
+exports.getIdFromToken = token => {
+  const decodedToken = jwt.decode(token, process.env.JWT_SECRET);
+  return decodedToken._id;
+};
 
 exports.accountname = token => {
   const name = getNameFromToken(token);

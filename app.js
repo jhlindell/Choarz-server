@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const winston = require('winston');
 const authRoutes = require('./routes/auth.routes');
+const accountRoutes = require('./routes/account.routes');
 const passportSetup = require('./config/passport-setup');
 const dbConfig = require('./config/database.config.js');
 const mongoose = require('mongoose');
@@ -23,19 +24,19 @@ if (process.env.NODE_ENV !== 'test') {
     .connect(dbConfig.url, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      useFindAndModify: false,
     })
     .then(() => {
       logger.info('Successfully connected to the database');
     })
     .catch(err => {
-      logger.info(
-        `could not connect to the database. Exiting now... ${err}`,
-      );
+      logger.info(`could not connect to the database. Exiting now... ${err}`);
       process.exit();
     });
 }
 
 app.use('/auth', authRoutes);
+app.use('/account', accountRoutes);
 
 app.get('/', (req, res) => {
   res.send('home');

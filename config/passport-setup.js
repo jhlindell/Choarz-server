@@ -42,7 +42,7 @@ const JwtLogin = new JwtStrategy(jwtOptions, (payload, done) => {
   // See if the user id in the payload exists in the database
   // if it does, call done with that
   // otherwise, call done without a user object
-  Account.findById(payload.id, (err, user) => {
+  Account.findById(payload._id, (err, user) => {
     if (err) {
       done(err, false);
     }
