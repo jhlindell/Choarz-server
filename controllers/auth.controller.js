@@ -1,4 +1,3 @@
-const Account = require('../models/account.model');
 const jwt = require('jsonwebtoken');
 
 exports.tokenForAccount = account => {
@@ -16,10 +15,10 @@ exports.tokenForAccount = account => {
   });
 };
 
-function getNameFromToken(token) {
+const getNameFromToken = token => {
   const decodedToken = jwt.decode(token, process.env.JWT_SECRET);
   return decodedToken.familyname;
-}
+};
 
 exports.getIdFromToken = token => {
   const decodedToken = jwt.decode(token, process.env.JWT_SECRET);

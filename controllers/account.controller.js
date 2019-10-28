@@ -10,7 +10,7 @@ exports.findAccount = token => {
   } catch (err) {
     throw err;
   }
-  return Account.findById(id)
+  return Account.findById(objectId)
     .then(account => {
       if (account) {
         return account;
@@ -22,19 +22,33 @@ exports.findAccount = token => {
     });
 };
 
-exports.update = (account, token) => {
-  const tokenId = getIdFromToken(token);
-  const accountId = account._id;
-  let objectId;
-
-  if (tokenId !== accountId) {
-    throw new Error('Id mismatch');
+exports.create = async (familyname, username, accountID, email) => {
+  const account = new Account({
+    familyname,
+    username,
+    email,
+    accountID,
+  });
+  const error = account.validateSync();
+  if (error) {
+    throw error;
   } else {
     try {
-      objectId = mongoose.Types.ObjectId(accountId);
+      const newAccount = await account.save();
+      return newAccount;
     } catch (err) {
       throw err;
     }
+  }
+};
+
+exports.update = account => {
+  const accountId = account._id;
+  let objectId;
+  try {
+    objectId = mongoose.Types.ObjectId(accountId);
+  } catch (err) {
+    throw err;
   }
   const updatedAccount = new Account({
     _id: account._id,
@@ -53,9 +67,11 @@ exports.update = (account, token) => {
         if (result) {
           return result;
         }
+        console.log('thenerror');
         throw new Error('Account not found with supplied id');
       })
       .catch(err => {
+        console.log('catcherror');
         throw err;
       });
   }
