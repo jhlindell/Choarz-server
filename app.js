@@ -4,7 +4,6 @@ const cors = require('cors');
 const winston = require('winston');
 const authRoutes = require('./routes/auth.routes');
 const accountRoutes = require('./routes/account.routes');
-const passportSetup = require('./config/passport-setup');
 const dbConfig = require('./config/database.config.js');
 const mongoose = require('mongoose');
 

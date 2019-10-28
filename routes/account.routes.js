@@ -2,7 +2,6 @@ const router = require('express').Router();
 const accounts = require('../controllers/account.controller');
 require('../config/passport-setup');
 const passport = require('passport');
-const jwt = require('jsonwebtoken');
 
 const requireAuth = passport.authenticate('jwt', { session: false });
 
@@ -11,6 +10,7 @@ router.get('/', requireAuth, async (req, res) => {
   try {
     const account = await accounts.findAccount(token);
     if (account._id) {
+      console.log(account);
       res.send(account);
     }
   } catch (err) {
@@ -26,10 +26,9 @@ router.get('/', requireAuth, async (req, res) => {
 });
 
 router.put('/', requireAuth, async (req, res) => {
-  const token = req.headers.authorization;
   const account = req.body;
   try {
-    const result = accounts.update(account, token);
+    const result = accounts.update(account);
     res.send(result);
   } catch (err) {
     if (
